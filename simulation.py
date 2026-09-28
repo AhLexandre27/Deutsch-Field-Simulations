@@ -4,24 +4,30 @@ from numba import njit
 import warnings
 warnings.filterwarnings('ignore')  # Ignorar warnings numéricos
 
+# ==========================================
+# PHYSICAL PARAMETERS FOR THE SIMULATION
+# ==========================================
 
-#### Physical Paramteres For the Simulation:
-## (NS Normalized values)
-R = 1.0    # Star radius
-c = 1.0    # Speed of light
-B0 = 1.0   # Surface B-Field
-om = 0.209        # Angular velocity of the star (normalized for P=0.001s)
-r_lc = 1.0 / om      # Light cylinder radius
-r_esc = 3.0 * r_lc    # Escape radius
+# Neutron star parameters
+R = 1.0        # Star radius (normalized)
+c = 1.0        # Speed of light (normalized to 1)
+B0 = 1.0       # Surface magnetic field strength (normalized)
 
-t_max = 5.0 * 2.0 * np.pi / om # Maximum time of simulation (5 rotations)
-ETA = np.diag([-1.0, 1.0, 1.0, 1.0]) ## Flat-Spacetime (Non GR)
-
-
-#### Artificial Particle Parameters 
-alpha = 1000           # Charge-to-mass ratio (qB_0R_0/mc^2)
+# Particle parameters
+alpha = 10000          # Charge-to-mass ratio (qB_0R_0/mc^2) - ALTERADO PARA 1000
 eta = 1.88e-19         # eta=k_rad*alpha**2
-k_rad = eta * alpha**2 # Radiation reaction coupling contant
+k_rad = eta * alpha**2 # Radiation reaction force coefficient
+
+# Rotation parameters
+om = 0.209               # Angular velocity of the star (normalized for P=0.001s)
+r_lc = 1.0 / om          # Light cylinder radius
+r_esc = 3.0 * r_lc       # Escape radius (we consider particle has escaped)
+
+# Flat spacetime metric (Minkowski)
+ETA = np.diag([-1.0, 1.0, 1.0, 1.0])
+
+# Maximum simulation time (5 rotation periods)
+t_max = 5.0 * 2.0 * np.pi / om
 
 # ==========================================
 # SPHERICAL BESSEL FUNCTIONS
@@ -223,7 +229,7 @@ event_ejected.terminal = True
 event_ejected.direction = 1
 
 # ==========================================
-# MAIN SIMULATION FUNCTION
+# MAIN SIMULATION FUNCTION (MODIFICADA)
 # ==========================================
 
 def simulate_single_particle(particle_data):
